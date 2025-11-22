@@ -9,13 +9,13 @@ class Attention(nn.Module):
 
     def forward(self, h):
         weights = torch.softmax(self.attn(h), dim=1)
-        context = (weights * h).sum(dim=1)
-        return context, weights
+        ctx = (weights * h).sum(dim=1)
+        return ctx, weights
 
 class LSTMAttnModel(nn.Module):
-    def __init__(self, input_dim, hidden_dim=64, num_layers=2):
+    def __init__(self, input_dim, hidden_dim=64):
         super().__init__()
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(input_dim, hidden_dim, batch_first=True)
         self.attn = Attention(hidden_dim)
         self.fc = nn.Linear(hidden_dim, 1)
 
